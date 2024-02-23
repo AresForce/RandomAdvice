@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advice</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap');
+
+        body {
+            background: rgb(2,16,44);
+            font-family: 'Yeseva One', serif;
+            text-align: center;
+            padding-right: 100px;
+            padding-left: 100px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 50px;
+            margin-top: 3vh;
+            color: rgb(255, 102, 0);
+            transition: color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        h1:hover {
+            color: rgb(153, 55, 6);
+        }
+
+        h2 {
+            font-size: 30px;
+            margin-top: 5vh;
+            color: rgb(255, 255, 255);
+        }
+
+        h3 {
+            font-size: 30px;
+            font-style: italic;
+            margin-top: 40vh;
+            color: rgb(35, 37, 50);
+
+        }
+
+    </style>
+
+</head>
+<body>
+    <h3></h3>
+    <h1></h1>
+    <h2></h2>
+</body>
+</html>
+<script>
+
+    $(function() {
+
+        $('body').keydown(function(e){
+
+            if(e.keyCode == 32){
+                getAdvice();
+            }
+
+        });
+
+        $(document).click(function() {
+            getAdvice();
+        });
+
+        var counter = 0;
+        var previousAdvice = "";
+
+        function getAdvice() {
+            
+            fetch('https://api.adviceslip.com/advice')
+            .then(response => response.json())
+            .then(data => {
+                const advice = data.slip.advice;
+                const id = data.slip.id;
+                if (advice !== previousAdvice) {
+                    counter++;
+                }
+                previousAdvice = advice;
+                $('h1').html(advice);
+                $('title').html(advice);
+                $('h2').html(counter);
+                $('h3').html("#" + id);
+            })
+            .catch(error => {
+                $('h1').html('Fehler: ' + error);
+                $('h3').html("");
+            });
+            
+        }
+        
+        getAdvice();
+    });
+
+</script>
